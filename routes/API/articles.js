@@ -5,13 +5,16 @@ const axios = require("axios");
 const db = require("../../models");
 
 router.get("/articles", (req, res) => {
-    const params = Object.assign(
-        { api_key: "72f9978cdf6d4588859456531d3b5936" },
-        req.query
-      );
+    console.log(req.query.q);
+    const apiKey = "72f9978cdf6d4588859456531d3b5936";
+    const baseURL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=';
+    const fullURL = `${baseURL}${apiKey}&q=${req.query.q}`;
+    console.log(fullURL);
     axios
-        .get("https://api.nytimes.com/svc/search/v2/articlesearch.json", {params})
-        .then(({ data: { results } }) => res.json(results))
+        .get(fullURL)
+        .then((data) => {
+            res.json(data.data.response);     
+        })
         .catch(err => res.status(422).json(err));
         
 });

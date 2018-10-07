@@ -20,42 +20,44 @@ class Home extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
         API.getArticles(this.state.articlesSearch)
-        .then(res => this.setState({ articles: res.data }))
+        .then(res => {
+            this.setState({ articles: res.data.docs })
+        })
         .catch(err => console.log(err));
-        console.log(this.state);
     };
 
     render() {
         return (
             <div>
-            <form>
-                <Input
-                    name="articlesSearch"
-                    value={this.state.articlesSearch}
-                    onChange={this.handleInputChange}
-                    placeholder="Search for a NY times article"
-                />
-                <a href="/results">
-                <Submit
-                    onClick={this.handleFormSubmit}
-                >Search!</Submit>
-                </a>
-            </form>
-            {!this.state.articles.length ? (
-                <h1 className="text-center">No Articles to Display</h1>
-            ) : (
-                <ArticleList>
-                    {this.state.articles.map(article => {
-                        return (
-                            <ArticleListItem
-                                key={article.title}
-                                title={article.title}
-                                href={article.href}
-                            />
-                        );
-                    })}
-                </ArticleList>
-            )}
+                <form>
+                    <Input
+                        name="articlesSearch"
+                        value={this.state.articlesSearch}
+                        onChange={this.handleInputChange}
+                        placeholder="Search for a NY times article"
+                    />
+                    <a href="/results">
+                    <Submit
+                        onClick={this.handleFormSubmit}
+                    >Search!</Submit>
+                    </a>
+                </form>
+                {!this.state.articles.length ? (
+                    <h1 className="text-center">No Articles to Display</h1>
+                ) : (
+                    <ArticleList>
+                        {this.state.articles.map(article => {
+                            return (
+                                <ArticleListItem
+                                    key={article.headline.main}
+                                    title={article.headline.main}
+                                    sneakPeak={article.snippet}
+                                    href={article.web_url}
+                                />
+                            );
+                        })}
+                    </ArticleList>
+                )}
             </div>
         );
     }
